@@ -26,7 +26,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'name' => 'required|max:100|unique:categories,name,' . $this->category->id,
             'description' => 'required',
-            'status' => 'required'
+            'status' => 'required|in:active,inactive'
         ];
     }
 }
