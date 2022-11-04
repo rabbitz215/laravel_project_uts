@@ -27,10 +27,8 @@
         <label for="category" class="form-label">Category</label>
         <select name="category_id" class="form-select">
             @foreach ($categories as $category)
-                @if ($category->status == 'active')
-                    <option value="{{ $category->id }}" {{ $category->category_id == $category->id ? 'selected' : '' }}>
-                        {{ $category->name }}</option>
-                @endif
+                <option value="{{ $category->id }}" {{ $category->category_id == $category->id ? 'selected' : '' }}>
+                    {{ $category->name }}</option>
             @endforeach
         </select>
         @error('category')

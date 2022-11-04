@@ -34,9 +34,9 @@ class ProductController extends Controller
                 $query->where('category_id', '=', $filter);
             });
         }
-        $data = $data->paginate(5);
+        $data = $data->paginate(10);
         return view('pages.product.list', compact('data'), [
-            'judul' => 'List Product',
+            'title' => 'List Product',
             'categories' => Category::get()
         ]);
     }
@@ -51,8 +51,8 @@ class ProductController extends Controller
         $product = new Product();
         return view('pages.product.form', [
             'product' => $product,
-            'judul' => 'Create a new product',
-            'categories' => Category::get()
+            'title' => 'Create a new product',
+            'categories' => Category::where('status', 'active')->get()
         ]);
     }
 
@@ -94,9 +94,9 @@ class ProductController extends Controller
     public function edit(Product $product)
     {
         return view('pages.product.form', [
-            'judul' => 'Edit Product',
+            'title' => 'Edit Product',
             'product' => $product,
-            'categories' => Category::get()
+            'categories' => Category::where('status', 'active')->get()
         ]);
     }
 

@@ -15,9 +15,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return view('pages.category.list', [
-            'data' => Category::get(),
-            'judul' => 'List Category'
+        $data = Category::paginate(10);
+
+        return view('pages.category.list', compact('data'), [
+            'title' => 'List Category'
         ]);
     }
 
@@ -31,7 +32,7 @@ class CategoryController extends Controller
         $category = new Category();
         return view('pages.category.form', [
             'category' => $category,
-            'judul' => 'Create Category'
+            'title' => 'Create Category'
         ]);
     }
 
@@ -59,7 +60,7 @@ class CategoryController extends Controller
         $categories = $category->load(['products']);
         return view('pages.category.listproducts', [
             'categories' => $categories,
-            'judul' => "List Products"
+            'title' => "List Products"
         ]);
     }
 
@@ -73,7 +74,7 @@ class CategoryController extends Controller
     {
         return view('pages.category.form', [
             'category' => $category,
-            'judul' => "Edit Form Category"
+            'title' => "Edit Form Category"
         ]);
     }
 
