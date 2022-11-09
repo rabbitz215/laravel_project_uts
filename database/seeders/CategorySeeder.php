@@ -15,7 +15,6 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        Category::truncate();
         $categories = ['Elektronik', 'Sembako', 'Jaket', 'Sepatu'];
         foreach ($categories as $key => $category) {
             Category::create([

@@ -13,15 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('transaction_details', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
-            $table->foreignId('category_id')->constrained();
-            $table->text('description');
-            $table->float('price', 12, 2);
-            $table->float('weight');
-            $table->string('image')->nullable();
-            $table->enum('status', ['active', 'inactive', 'draft']);
+            $table->foreignId('transaction_id')->constrained();
+            $table->foreignId('product_id')->constrained();
+            $table->integer('quantity');
+            $table->float('amount', 12, 2);
             $table->timestamps();
         });
     }
@@ -33,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('transaction_details');
     }
 };

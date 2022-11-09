@@ -17,7 +17,6 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        Product::truncate();
         $faker = Factory::create("id_ID");
         $categories = Category::get();
         $image = "images/product/200.png";
