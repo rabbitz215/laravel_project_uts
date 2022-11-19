@@ -8,6 +8,7 @@ use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
+use Ramsey\Uuid\Uuid;
 
 class TransactionController extends Controller
 {
@@ -45,6 +46,7 @@ class TransactionController extends Controller
         DB::beginTransaction();
         try {
             $transaction = Transaction::create([
+                'id' => Uuid::uuid4()->toString(),
                 'customer' => 'galang',
                 'total_amount' => 200000
             ]);
@@ -53,6 +55,7 @@ class TransactionController extends Controller
 
             foreach ($products as $key => $value) {
                 $transaction_details[] = [
+                    'id' => Uuid::uuid4()->toString(),
                     'transaction_id' => $transaction->id,
                     'product_id' => $value,
                     'quantity' => 20,
@@ -70,7 +73,7 @@ class TransactionController extends Controller
         } catch (\Throwable $th) {
             //melakukan rollback/membatalkan query jika terjadi kesalahan
             DB::rollBack();
-            return "Gagal";
+            return $th;
         }
     }
 

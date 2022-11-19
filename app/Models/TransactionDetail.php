@@ -9,5 +9,12 @@ class TransactionDetail extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['transaction_id', 'product_id', 'quantity', 'amount', 'created_at'];
+    protected $fillable = ['id', 'transaction_id', 'product_id', 'quantity', 'amount', 'created_at'];
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+
+    public $incrementing = false;
 }
