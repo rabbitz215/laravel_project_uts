@@ -21,12 +21,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/product', ProductController::class);
-Route::resource('/category', CategoryController::class);
-
 Route::get('/transaction', [TransactionController::class, 'store']);
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::group(['middleware' => 'auth'], function () {
+    Route::resource('/product', ProductController::class);
+    Route::resource('/category', CategoryController::class);
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
+});

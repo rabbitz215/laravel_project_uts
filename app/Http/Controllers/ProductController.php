@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -48,12 +49,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $product = new Product();
-        // return view('pages.product.form', [
-        //     'product' => $product,
-        //     'title' => 'Create a new product',
-        //     'categories' => Category::where('status', 'active')->get()
-        // ]);
 
         return view('admin.pages.product.form', [
             'product' => $product,
@@ -99,6 +98,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
+
         return view('admin.pages.product.form', [
             'title' => 'Edit Product',
             'product' => $product,
