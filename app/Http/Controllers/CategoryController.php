@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
 
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     {
         $data = Category::paginate(10);
 
-        return view('pages.category.list', compact('data'), [
+        return view('admin.pages.category.list', compact('data'), [
             'title' => 'List Category'
         ]);
     }
@@ -29,8 +30,11 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('form category')) {
+            return redirect()->route('category.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $category = new Category();
-        return view('pages.category.form', [
+        return view('admin.pages.category.form', [
             'category' => $category,
             'title' => 'Create Category'
         ]);
@@ -58,7 +62,7 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         $categories = $category->load(['products']);
-        return view('pages.category.listproducts', [
+        return view('admin.pages.category.listproducts', [
             'categories' => $categories,
             'title' => "List Products"
         ]);
@@ -72,7 +76,11 @@ class CategoryController extends Controller
      */
     public function edit(Category $category)
     {
-        return view('pages.category.form', [
+        if (!Auth::user()->hasPermissionTo('form category')) {
+            return redirect()->route('category.index')->with('notif', 'Tidak ada akses !!!');
+        }
+
+        return view('admin.pages.category.form', [
             'category' => $category,
             'title' => "Edit Form Category"
         ]);

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -35,7 +36,7 @@ class ProductController extends Controller
             });
         }
         $data = $data->paginate(10);
-        return view('pages.product.list', compact('data'), [
+        return view('admin.pages.product.list', compact('data'), [
             'title' => 'List Product',
             'categories' => Category::get()
         ]);
@@ -48,8 +49,12 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $product = new Product();
-        return view('pages.product.form', [
+
+        return view('admin.pages.product.form', [
             'product' => $product,
             'title' => 'Create a new product',
             'categories' => Category::where('status', 'active')->get()
@@ -71,7 +76,7 @@ class ProductController extends Controller
         }
         Product::create($data);
 
-        return redirect()->route('product.index')->with('notif', 'Product Berhasil di Buat');
+        return redirect()->route('product.index');
     }
 
     /**
@@ -93,7 +98,11 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('pages.product.form', [
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
+
+        return view('admin.pages.product.form', [
             'title' => 'Edit Product',
             'product' => $product,
             'categories' => Category::where('status', 'active')->get()
