@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Carbon\Carbon;
+use Midtrans\Snap;
+use Midtrans\Config;
 use Ramsey\Uuid\Uuid;
+use App\Models\Product;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\TransactionDetail;
@@ -53,7 +55,8 @@ class ApiController extends Controller
             $transaction = Transaction::create([
                 'id' => Uuid::uuid4()->toString(),
                 'customer' => $data['customer_name'],
-                'total_amount' => $total_amount
+                'total_amount' => $total_amount,
+                'email' => "galangputra376@gmail.com"
             ]);
 
             $transaction_details = [];
@@ -73,13 +76,40 @@ class ApiController extends Controller
             if ($transaction_details) {
                 TransactionDetail::insert($transaction_details);
             }
+            $paymentUrl = $this->createInvoice($transaction);
             //Menyimpan data create ke database
             DB::commit();
-            return $transaction;
+            return $paymentUrl;
         } catch (\Throwable $th) {
             //melakukan rollback/membatalkan query jika terjadi kesalahan
             DB::rollBack();
             return $th;
         }
+    }
+
+    public function createInvoice($transaction)
+    {
+        // set konnfigrasi midtrans ngambil dari config/midrtrans.php
+        Config::$serverKey = config('midtrans.serverKey');
+        Config::$isProduction = config('midtrans.isProduction');
+        Config::$isSanitized = config('midtrans.isSanitized');
+        Config::$is3ds = config('midtrans.is3ds');
+
+        // bat params untuk dikirim ke midtrans
+        $midtrans_params = [
+            'transaction_details' =>[
+                'order_id' => 'GPA-'.$transaction->id,
+                'gross_amount' => (int) $transaction->total_amount //ditetapkan harus int yang dikirim
+            ],
+            'customer_details' =>[
+                'first_name' => $transaction->customer,
+                'email' => $transaction->email
+            ],
+            // 'enabled_payment' => ['gopay'],
+            // 'vtweb' => []
+        ];
+
+        $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;
+        return $paymentUrl;
     }
 }
