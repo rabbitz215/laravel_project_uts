@@ -19,7 +19,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        //
+        return view('admin.pages.transaction.list');
     }
 
     /**
@@ -40,41 +40,7 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-        $products = [1, 2, 3, 4, 5, 6];
 
-        //memulai session untuk query transaction
-        DB::beginTransaction();
-        try {
-            $transaction = Transaction::create([
-                'id' => Uuid::uuid4()->toString(),
-                'customer' => 'galang',
-                'total_amount' => 200000
-            ]);
-
-            $transaction_details = [];
-
-            foreach ($products as $key => $value) {
-                $transaction_details[] = [
-                    'id' => Uuid::uuid4()->toString(),
-                    'transaction_id' => $transaction->id,
-                    'product_id' => $value,
-                    'quantity' => 20,
-                    'amount' => 3000,
-                    'created_at' => Carbon::now()
-                ];
-            }
-
-            if ($transaction_details) {
-                TransactionDetail::insert($transaction_details);
-            }
-            //Menyimpan data create ke database
-            DB::commit();
-            return "Data Masuk";
-        } catch (\Throwable $th) {
-            //melakukan rollback/membatalkan query jika terjadi kesalahan
-            DB::rollBack();
-            return $th;
-        }
     }
 
     /**
@@ -85,7 +51,7 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        //
+        return view('admin.pages.transaction.detail');
     }
 
     /**

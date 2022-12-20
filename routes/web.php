@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\TransactionController;
 
 /*
@@ -23,8 +24,10 @@ Route::get('/', function () {
 
 Route::resource('/product', ProductController::class);
 Route::resource('/category', CategoryController::class);
+Route::resource('/transaction', TransactionController::class);
+Route::resource('/checkout', CheckoutController::class);
+Route::get('/chart', [CheckoutController::class, 'chart'])->name('chart');
 
-Route::get('/transaction', [TransactionController::class, 'store']);
 
 Auth::routes();
 
