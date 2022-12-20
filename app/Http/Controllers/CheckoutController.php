@@ -32,7 +32,10 @@ class CheckoutController extends Controller
         $qty = (int) $request->input('qty', 1);
         $checkout = [
             'products' => [],
-            'user' => null,
+            'user' => [
+                "name" => "",
+                "address" => ""
+            ],
         ];
         $data = Cache::get('checkout', $checkout);
         $temp = null;
@@ -41,7 +44,7 @@ class CheckoutController extends Controller
                 "id" => $productID,
                 "qty" => $qty + $data['products'][$productID]['qty']
             ];
-        }else{
+        } else {
             $temp =  [
                 "id" => $productID,
                 "qty" => $qty
