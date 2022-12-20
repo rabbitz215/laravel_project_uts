@@ -64,7 +64,9 @@ class CheckoutController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // TODO:
+        // save data to database
+        // and call midtrans for generate invoce of transaction
     }
 
     /**
