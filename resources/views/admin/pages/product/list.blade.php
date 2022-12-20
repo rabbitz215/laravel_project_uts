@@ -25,7 +25,8 @@
                     <tbody>
                         @foreach ($data as $item)
                             <tr>
-                                <th scope="row">{{ ($data->currentPage() - 1) * $data->perPage() + $loop->iteration }}
+                                {{-- <th scope="row">{{ ($data->currentPage() - 1) * $data->perPage() + $loop->iteration }} --}}
+                                <th scope="row">{{ $loop->iteration }}
                                 </th>
                                 <td>{{ $item->name }}</td>
                                 <td>{{ $item->description }}</td>
@@ -73,7 +74,7 @@
                     </tfoot>
                 </table>
                 <br>
-                {{ $data->withQueryString()->links() }}
+                {{-- {{ $data->withQueryString()->links() }} --}}
             </div>
             <!-- /.card-body -->
         </div>
