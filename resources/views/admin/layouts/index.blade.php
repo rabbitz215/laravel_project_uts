@@ -17,6 +17,8 @@
     <link rel="stylesheet" href="/dist/css/adminlte.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css">
+
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="hold-transition light-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed">
@@ -72,6 +74,8 @@
     <script src="/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
     <!-- AdminLTE App -->
     <script src="/dist/js/adminlte.js"></script>
+
+    @include('sweetalert::alert')
 
     <!-- PAGE PLUGINS -->
     <!-- jQuery Mapael -->

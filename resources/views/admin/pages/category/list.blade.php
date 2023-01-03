@@ -4,7 +4,7 @@
     <div class="col-12">
         <div class="card">
             @if ($message = Session::get('notif'))
-                <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
                     <strong>{{ $message }}</strong>
                 </div>
             @endif

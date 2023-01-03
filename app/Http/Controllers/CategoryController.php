@@ -108,6 +108,9 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
+        if (!Auth::user()->hasPermissionTo('form category')) {
+            return redirect()->route('category.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $category->destroy($category->id);
 
         return redirect()->route('category.index')->with('notif', 'Data Berhasil di Hapus');

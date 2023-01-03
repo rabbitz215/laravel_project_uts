@@ -147,6 +147,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $product->destroy($product->id);
         File::delete(storage_path('app/public/') . $product->image);
 

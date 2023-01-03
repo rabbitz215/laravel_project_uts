@@ -87,8 +87,10 @@ class ApiController extends Controller
         }
     }
 
-    public function createInvoice($transaction)
+    public function createInvoice($transactionJson)
     {
+        $transaction = json_decode($transactionJson);
+
         // set konnfigrasi midtrans ngambil dari config/midrtrans.php
         Config::$serverKey = config('midtrans.serverKey');
         Config::$isProduction = config('midtrans.isProduction');
@@ -97,16 +99,20 @@ class ApiController extends Controller
 
         // bat params untuk dikirim ke midtrans
         $midtrans_params = [
-            'transaction_details' =>[
-                'order_id' => 'GPA-'.$transaction->id,
+            'transaction_details' => [
+                'order_id' => 'RBA-' . $transaction->id,
                 'gross_amount' => (int) $transaction->total_amount //ditetapkan harus int yang dikirim
             ],
-            'customer_details' =>[
+            'customer_details' => [
                 'first_name' => $transaction->customer,
-                'email' => $transaction->email
+                'email' => $transaction->email,
+                'phone' => $transaction->phone,
+                "billing_address" => [
+                    "first_name" => $transaction->customer,
+                    "email" => $transaction->email,
+                    "address" => $transaction->address,
+                ]
             ],
-            // 'enabled_payment' => ['gopay'],
-            // 'vtweb' => []
         ];
 
         $paymentUrl = Snap::createTransaction($midtrans_params)->redirect_url;

@@ -3,6 +3,11 @@
 @section('content')
     <div class="col-12">
         <div class="card">
+            @if ($message = Session::get('notif'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </div>
+                @endif
             <div class="card-header">
                 <h3 class="card-title">DataTable with default features</h3>
             </div>

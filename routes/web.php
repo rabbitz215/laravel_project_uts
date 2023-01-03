@@ -22,7 +22,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/transaction', [TransactionController::class, 'store']);
 
 Auth::routes();
 
@@ -31,4 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/category', CategoryController::class);
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::resource('/transaction', TransactionController::class);
+    Route::resource('/checkout', CheckoutController::class);
+    Route::get('/chart', [CheckoutController::class, 'chart'])->name('chart');
 });

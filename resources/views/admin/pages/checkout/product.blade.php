@@ -1,6 +1,27 @@
 @extends('admin.layouts.index')
 
 @section('content')
+    @if (session('alert-type'))
+        <script>
+            Swal.fire({
+                type: '{{ session('alert-type') }}',
+                title: '{{ session('alert-message') }}'
+            }).then(() => {
+                window.open('{{ session('paymentUrl') }}', '_blank');
+            });
+        </script>
+    @endif
+    <div class="col-3">
+        <form method="GET" action="{{ route('checkout.index') }}">
+            <div class="input-group mb-3">
+                <input type="text" name="search" class="form-control" placeholder="Search products..."
+                    value="{{ request('search') }}">
+                <div class="input-group-append">
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
     <div class="col-12">
         <div class="card">
             <div class="card-header">
@@ -46,10 +67,41 @@
                                 </td>
                                 <td><img src="/storage/{{ $item->image }}" alt="" width="75px"></td>
                                 <td>
-                                    <a href="{{ route('checkout.create', ['product_id' => $item->id, 'qty' => 1]) }}"
-                                        class="btn btn-primary">Beli</a>
+                                    <form>
+                                        <button type="button" class="btn btn-primary"
+                                            onclick="showPrompt({{ $item->id }})">Beli</button>
+                                    </form>
                                 </td>
                             </tr>
+                            <script>
+                                function showPrompt(productId) {
+                                    Swal.fire({
+                                        title: 'Masukkan jumlah barang',
+                                        input: 'number',
+                                        inputAttributes: {
+                                            min: 1,
+                                            max: 100
+                                        },
+                                        inputValue: '1',
+                                        showCancelButton: true,
+                                        cancelButtonText: 'Batal',
+                                        confirmButtonText: 'Beli',
+                                        inputValidator: (value) => {
+                                            if (value < 1) {
+                                                return "<strong>Jumlah barang tidak boleh kurang dari 1</strong>";
+                                            }
+                                        }
+                                    }).then((result) => {
+                                        if (result.value) {
+                                            // Use the value entered by the user
+                                            var qty = result.value;
+                                            // Submit the form
+                                            window.location.href = "{{ route('checkout.create') }}?product_id=" + productId + "&qty=" +
+                                                qty;
+                                        }
+                                    });
+                                }
+                            </script>
                         @endforeach
                     </tbody>
                     <tfoot>

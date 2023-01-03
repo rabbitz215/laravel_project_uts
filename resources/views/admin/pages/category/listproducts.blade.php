@@ -24,7 +24,7 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration }}</th>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->price }}</td>
+                                <td>{{ @money($product->price) }}</td>
                                 <td>{{ $product->weight }}</td>
                                 <td><img src="/storage/{{ $product->image }}" alt="" width="25"></td>
                             </tr>

@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use Midtrans\Config;
+use Ramsey\Uuid\Uuid;
+use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\TransactionDetail;
 use Illuminate\Support\Facades\DB;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
-use Ramsey\Uuid\Uuid;
 
 class TransactionController extends Controller
 {
@@ -19,7 +21,24 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return view('admin.pages.transaction.list');
+        Config::$serverKey = config('midtrans.serverKey');
+        $transactions = Transaction::get();
+        $status = [];
+        foreach ($transactions as $transaction) {
+            try {
+                $id = $transaction->id;
+                $status[] = \Midtrans\Transaction::status("RBA-$id");
+            } catch (\Exception $e) {
+                $status[] = (object) [
+                    "order_id" => "RBA-$id",
+                    "transaction_status" => "unknown"
+                ];
+            }
+        }
+        return view('admin.pages.transaction.list', [
+            'transactions' => $transactions,
+            'status' => $status
+        ]);
     }
 
     /**
@@ -40,7 +59,6 @@ class TransactionController extends Controller
      */
     public function store(StoreTransactionRequest $request)
     {
-
     }
 
     /**
@@ -51,7 +69,22 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
-        return view('admin.pages.transaction.detail');
+        Config::$serverKey = config('midtrans.serverKey');
+        $id = $transaction->id;
+        try {
+            $status = \Midtrans\Transaction::status("RBA-$id");
+        } catch (\Exception $e) {
+            $status = (object) [
+                "order_id" => "RBA-$id",
+                "transaction_status" => "unknown"
+            ];
+        }
+        $details = TransactionDetail::where('transaction_id', $id)->with(['product'])->get();
+        return view('admin.pages.transaction.detail', [
+            'details' => $details,
+            'transaction' => $transaction,
+            'status' => $status
+        ]);
     }
 
     /**
