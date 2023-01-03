@@ -55,7 +55,7 @@
                         </li>
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-edit"></i>
                         <p>
@@ -70,15 +70,17 @@
                                 <p>Category List</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('category.create') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Category Create</p>
-                            </a>
-                        </li>
+                        @role('admin')
+                            <li class="nav-item">
+                                <a href="{{ route('category.create') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Category Create</p>
+                                </a>
+                            </li>
+                        @endrole
                     </ul>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item menu-open">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-edit"></i>
                         <p>
@@ -93,12 +95,14 @@
                                 <p>Product List</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('product.create') }}" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Product Create</p>
-                            </a>
-                        </li>
+                        @role('admin')
+                            <li class="nav-item">
+                                <a href="{{ route('product.create') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Product Create</p>
+                                </a>
+                            </li>
+                        @endrole
                     </ul>
                 </li>
                 <li class="nav-item">

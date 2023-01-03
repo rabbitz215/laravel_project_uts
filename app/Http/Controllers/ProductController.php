@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends Controller
 {
@@ -20,24 +22,27 @@ class ProductController extends Controller
     {
         $search = $request->input('search');
         $filter = $request->input('filter');
-        $data = Product::with(['category']);
 
-        if ($search) {
-            $data->where(function ($query) use ($search) {
-                $query->where('name', 'like', "%$search%")
-                    ->orWhere('description', 'like', "%$search%");
-            });
-        }
+        $data = Cache::remember('all-products', 60, function () use($search, $filter){
+            $data = Product::with(['category']);
 
-        if ($filter) {
-            $data->where(function ($query) use ($filter) {
-                $query->where('category_id', '=', $filter);
-            });
-        }
-        $data = $data->paginate(10);
+            if ($search) {
+                $data->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%$search%")
+                        ->orWhere('description', 'like', "%$search%");
+                });
+            }
+
+            if ($filter) {
+                $data->where(function ($query) use ($filter) {
+                    $query->where('category_id', '=', $filter);
+                });
+            }
+            return $data->get();
+        });
+
         return view('admin.pages.product.list', compact('data'), [
-            'title' => 'List Product',
-            'categories' => Category::get()
+            'title' => 'List Product'
         ]);
     }
 
@@ -48,12 +53,10 @@ class ProductController extends Controller
      */
     public function create()
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
         $product = new Product();
-        // return view('pages.product.form', [
-        //     'product' => $product,
-        //     'title' => 'Create a new product',
-        //     'categories' => Category::where('status', 'active')->get()
-        // ]);
 
         return view('admin.pages.product.form', [
             'product' => $product,
@@ -99,6 +102,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
+        if (!Auth::user()->hasPermissionTo('form product')) {
+            return redirect()->route('product.index')->with('notif', 'Tidak ada akses !!!');
+        }
+
         return view('admin.pages.product.form', [
             'title' => 'Edit Product',
             'product' => $product,
