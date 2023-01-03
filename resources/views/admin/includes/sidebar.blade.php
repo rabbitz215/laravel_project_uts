@@ -105,6 +105,50 @@
                         @endrole
                     </ul>
                 </li>
+                @can('transaction')
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                Transaction
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('transaction.index') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>List Transaction</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
+                @can(['checkout', 'chart'])
+                    <li class="nav-item menu-open">
+                        <a href="#" class="nav-link">
+                            <i class="nav-icon fas fa-edit"></i>
+                            <p>
+                                Checkout
+                                <i class="fas fa-angle-left right"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('checkout.index') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>Checkout</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('chart') }}" class="nav-link">
+                                    <i class="far fa-circle nav-icon"></i>
+                                    <p>My Chart</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endcan
                 <li class="nav-header">User</li>
                 <li class="nav-item">
                     <form action="{{ route('logout') }}" class="d-inline" method="POST">

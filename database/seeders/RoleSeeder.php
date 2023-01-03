@@ -19,7 +19,14 @@ class RoleSeeder extends Seeder
         $role = Role::findOrCreate('admin');
         $permissionProduct = Permission::findOrCreate('form product', 'web');
         $permissionCategory = Permission::findOrCreate('form category', 'web');
+        $permissionTransaction = Permission::findOrCreate('transaction', 'web');
 
-        $role->givePermissionTo($permissionProduct, $permissionCategory);
+        $role->givePermissionTo($permissionProduct, $permissionCategory, $permissionTransaction);
+
+        $role1 = Role::findOrCreate('member');
+        $permissionCheckout = Permission::findOrCreate('checkout', 'web');
+        $permissionChart = Permission::findOrCreate('chart', 'web');
+
+        $role1->givePermissionTo($permissionCheckout, $permissionChart);
     }
 }
